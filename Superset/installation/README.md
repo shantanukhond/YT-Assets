@@ -65,6 +65,12 @@ WTF_CSRF_ENABLED = False
 MAPBOX_API_KEY = ''
 ```
 
+Please replace YOUR_OWN_RANDOM_GENERATED_SECRET_KEY in above file with the code returned by following command
+
+```
+openssl rand -base64 42
+```
+
 * Once Done let us inititlize database with following commands 
 
 ```
