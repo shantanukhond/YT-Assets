@@ -5,7 +5,9 @@
 
 * Update Ubuntu
 
-`sudo apt update -y & sudo apt upgrade -y`
+```
+sudo apt update -y & sudo apt upgrade -y
+```
 
 * Create app directory for superset and dependencies 
 
