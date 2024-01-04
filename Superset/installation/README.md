@@ -11,7 +11,7 @@ sudo apt update -y & sudo apt upgrade -y
 * Install dependancies
 
 ```
-sudo apt-get install build-essential libssl-dev libffi-dev python3-dev python3-pip libsasl2-dev libldap2-dev default-libmysqlclient-dev
+sudo apt-get install build-essential libssl-dev libffi-dev python3-dev python3-pip libsasl2-dev libldap2-dev default-libmysqlclient-dev python3.10-venv
 ``` 
 
 * Create app directory for superset and dependencies 
