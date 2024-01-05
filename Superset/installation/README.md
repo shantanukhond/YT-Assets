@@ -3,7 +3,7 @@
 
 #### Set up environment
 
-* Update Ubuntu
+* Update Ubuntu/Debian
 
 ```
 sudo apt update -y & sudo apt upgrade -y
@@ -17,7 +17,8 @@ sudo apt-get install build-essential libssl-dev libffi-dev python3-dev python3-p
 * Create app directory for superset and dependencies 
 
 ```
-mkdir /app
+sudo mkdir /app
+sudo chown user /app
 cd /app
 ```
 
@@ -31,11 +32,19 @@ python3 -m venv superset_env
 pip install --upgrade setuptools pip
 ```
 
+* Install Required dependancies
+
+```
+pip install pillow
+pip install apache-superset
+```
+
+
 * Create superset config file and set environment variable 
 
 ```
 touch superset_config.py
-export SUPERSET_CONFIG_PATH=/app/superset-env/superset_config.py
+export SUPERSET_CONFIG_PATH=/app/superset/superset_config.py
 
 ```
 
@@ -61,7 +70,7 @@ SECRET_KEY = 'YOUR_OWN_RANDOM_GENERATED_SECRET_KEY'
 # you want to explore are managed directly in the web UI
 # The check_same_thread=false property ensures the sqlite client does not attempt
 # to enforce single-threaded access, which may be problematic in some edge cases
-SQLALCHEMY_DATABASE_URI = 'sqlite:////app/superset-env/superset.db?check_same_thread=false'
+SQLALCHEMY_DATABASE_URI = 'sqlite:////app/superset/superset.db?check_same_thread=false'
 
 TALISMAN_ENABLED = False
 WTF_CSRF_ENABLED = False
@@ -105,8 +114,8 @@ and paste following code in it.
 
 ```
 #!/bin/bash
-export SUPERSET_CONFIG_PATH=/app/superset-env/superset_config.py
- . /app/superset-env/superset_env/bin/activate
+export SUPERSET_CONFIG_PATH=/app/superset/superset_config.py
+ . /app/superset/superset_env/bin/activate
 gunicorn \
       -w 10 \
       -k gevent \
@@ -146,12 +155,12 @@ Description = Apache Superset Webserver Daemon
 After = network.target
 
 [Service]
-PIDFile = /app/superset-env/superset-webserver.PIDFile
-Environment=SUPERSET_HOME=/app/superset-env
-Environment=PYTHONPATH=/app/superset-env
-WorkingDirectory = /app/superset-env
+PIDFile = /app/superset/superset-webserver.PIDFile
+Environment=SUPERSET_HOME=/app/superset
+Environment=PYTHONPATH=/app/superset
+WorkingDirectory = /app/superset
 limit-re>
-ExecStart = /app/superset-env/run_superset.sh
+ExecStart = /app/superset/run_superset.sh
 ExecStop = /bin/kill -s TERM $MAINPID
 
 
