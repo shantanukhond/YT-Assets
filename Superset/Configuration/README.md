@@ -57,13 +57,14 @@ The `index.tsx` file contains default theme you can refer defaultTheme Variable 
 One more thread I found for theming is https://github.com/apache/superset/issues/20159
 
 ```    
+
 THEME_OVERRIDES = {
     
     "colors": {
 
-        text: {
-            label: '#879399',
-            help: '#737373'
+        "text": {
+            "label": '#879399',
+            "help": '#737373'
         },
 
         "primary": {
@@ -81,18 +82,18 @@ THEME_OVERRIDES = {
     },
 
 
-    typography: {
-        families: {
-        sansSerif: `'Inter', Helvetica, Arial`,
-        serif: `Georgia, 'Times New Roman', Times, serif`,
-        monospace: `'Fira Code', 'Courier New', monospace`,
+    "typography": {
+        "families": {
+        "sansSerif": 'Inter',
+        "serif": 'Georgia',
+        "monospace": 'Fira Code',
         },
-        weights: {
-            light: 200,
-            normal: 400,
-            medium: 500,
-            bold: 600
+        "weights": {
+            "light": 200,
+            "normal": 400,
+            "medium": 500,
+            "bold": 600
         }
-    }
+	}
 }
 ```
