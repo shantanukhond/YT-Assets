@@ -2,14 +2,14 @@
 
 
 We will Be configuring following (More Will be added as I explore):
-1.  App Name
-1.  Logo
-1.  Favicon Icon
-1.  Loading Animation GIF
-1.  Color Theme
+1.  App Name [here](#setting-up-app-name)
+1.  Logo [here](#setting-up-logo)
+1.  Favicon Icon [here](#setting-up-favicon-icon)
+1.  Loading Animation GIF [here](#setting-up-favicon-icon)
+1.  Color Theme [here](#setting-up-custom-color-theme)
 
 
-#### Setting Up App Name
+### Setting Up App Name
 Setting Up app Name is easy and can be done by adding following constant in `superset_config.py` file
 
 ```
@@ -17,7 +17,7 @@ Setting Up app Name is easy and can be done by adding following constant in `sup
 ```
 
 
-#### Setting Up Logo
+### Setting Up Logo
 To Change Logo Place your logo in `static/assets/images/your_app_name` path and copy url from `static/assets/images/your_app_name` and paste below. Along with logo we will configure route when clicked on logo and on hover what should be visible. Also, we can add if any sub heading or branding if there is any.
 
 ```
@@ -36,15 +36,73 @@ To Change Logo Place your logo in `static/assets/images/your_app_name` path and 
 ```
 
 
-#### Setting Up Favicon Icon
+### Setting Up Favicon Icon
 To Setup Favicon place favicon icon in `static/assets/images/your_app_name/favicon/` folder and copy path from `static/assets/images/your_app_name/favicon/favicon.png` and put in configuration file as shown below
  
 ```
     FAVICONS = [{"href": "static/assets/images/your_app_name/favicon/favicon.png"}]
 ```
 
-#### Changing Loading gif
-Please note: 
-    this is not full proof method and I don't like to modify files provided by superset. Many times it shows the loading icon we provided and at the end it will again show superset loading icon. I tried to find it but in configuration files only one file is there. I am still trying to find from where it is coming. I found a thread regarding same on github but without any answers. (https://github.com/apache/superset/issues/26458)[https://github.com/apache/superset/issues/26458]
+### Changing Loading gif
+> **Please note:**  This is not full proof method and I don't like to modify files provided by superset. Many times it shows the loading icon we provided and at the end it will again show superset loading icon. I tried to find it but in configuration files only one file is there. I am still trying to find from where it is coming. I found a thread regarding same on github but without any answers. https://github.com/apache/superset/issues/26458
 
 To Change loading icon replace the original loading icon available at `superset/superset/static/assets/images/loading.gif` note name should be same as superset knows the loading file is here.
+
+
+### Setting Up Custom Color Theme
+
+# THEME_OVERRIDES is used for adding custom theme to superset
+# Example code for "My theme" custom scheme
+The `index.tsx` file contains default theme you can refer defaultTheme Variable in https://github.com/apache/superset/blob/master/superset-frontend/packages/superset-ui-core/src/style/index.tsx 
+
+```    
+    THEME_OVERRIDES = {
+      
+        "colors": {
+
+            text: {
+                label: '#879399',
+                help: '#737373'
+            },
+
+            "primary": {
+                "base": 'red',
+            },
+            "secondary": {
+                "base": 'green',
+            },
+            "grayscale": {
+                "base": 'orange',
+            },
+            "error":{
+                "base": 'Pink'
+            }
+        },
+
+
+        typography: {
+            families: {
+            sansSerif: `'Inter', Helvetica, Arial`,
+            serif: `Georgia, 'Times New Roman', Times, serif`,
+            monospace: `'Fira Code', 'Courier New', monospace`,
+            },
+            weights: {
+                light: 200,
+                normal: 400,
+                medium: 500,
+                bold: 600
+            },
+            sizes: {
+                xxs: 9,   
+                xs: 10,
+                s: 12,
+                m: 14,
+                l: 16,
+                xl: 21,
+                xxl: 28
+            },
+        }
+
+
+    }
+```
