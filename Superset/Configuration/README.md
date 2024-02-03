@@ -18,7 +18,7 @@ APP_NAME = "My Reporting Application"
 
 
 ### Setting Up Logo
-To Change Logo Place your logo in `static/assets/images/your_app_name` path and copy url from `static/assets/images/your_app_name` and paste below. Along with logo we will configure route when clicked on logo and on hover what should be visible. Also, we can add if any sub heading or branding if there is any.
+To Change Logo Place your logo in `/app/superset/superset_env/lib/python3.8/site-packages/superset/static/assets/images/your_app_name` path and copy url from `static/assets/images/your_app_name` and paste below. Along with logo we will configure route when clicked on logo and on hover what should be visible. Also, we can add if any sub heading or branding if there is any.
 
 ```
 APP_ICON = "/static/assets/images/your_app_name/logo.png"
@@ -37,7 +37,7 @@ LOGO_RIGHT_TEXT: Callable[[], str] | str = "My Department Name"
 
 
 ### Setting Up Favicon Icon
-To Setup Favicon place favicon icon in `static/assets/images/your_app_name/favicon/` folder and copy path from `static/assets/images/your_app_name/favicon/favicon.png` and put in configuration file as shown below
+To Setup Favicon place favicon icon in `/app/superset/superset_env/lib/python3.8/site-packages/superset/static/assets/images/your_app_name/favicon/` folder and copy path from `static/assets/images/your_app_name/favicon/favicon.png` and put in configuration file as shown below
  
 ```
 FAVICONS = [{"href": "static/assets/images/your_app_name/favicon/favicon.png"}]
@@ -92,16 +92,7 @@ THEME_OVERRIDES = {
             normal: 400,
             medium: 500,
             bold: 600
-        },
-        sizes: {
-            xxs: 9,   
-            xs: 10,
-            s: 12,
-            m: 14,
-            l: 16,
-            xl: 21,
-            xxl: 28
-        },
+        }
     }
 }
 ```
