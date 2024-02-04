@@ -30,7 +30,7 @@ LOGO_TARGET_PATH = '/'
 LOGO_TOOLTIP = "My App Name"
 
 # Specify any text that should appear to the right of the logo
-LOGO_RIGHT_TEXT: Callable[[], str] | str = "My Department Name"
+LOGO_RIGHT_TEXT = "My Department Name"
 
 
 ```
