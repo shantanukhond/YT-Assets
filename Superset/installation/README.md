@@ -179,3 +179,5 @@ sudo systemctl start superset.service
 
 ### YEY! Your production Server is Up and running you can test it by restarting the server...
 If you have any issues you can contact me on contact@shantanukhond.me . 
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/shantanukhond)
