@@ -3,7 +3,7 @@
 ![World Population](./assets/world_population_reporting_template.jpeg)
 
 
-We will be building above report in apache superset. This template is crafted by [Jitesh Raut](http://www.jiteshraut.me/).
+We will be building above report in apache superset. This template is crafted by [Jitesh Raut](https://github.com/jitesh-raut).
 
 
 To build this report we are using PostgreSQL database. All the data available in tables are available in [Population Data.xlsx](./Data/Population%20Data.xlsx)
