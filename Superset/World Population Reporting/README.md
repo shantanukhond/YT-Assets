@@ -15,9 +15,9 @@ To develope report we need data model as superset does not support modeling like
 
 > **Please note:**  Please note as I am doing this manually I have not created proper pk and fk. Joining over string is not advisable and should be avoided if possible. I am only doing it as I am currently only focusing on reporting and data is very small.
 
-![Data Model](./assets/world_population_reporting_template.jpeg)
+![Data Model](./assets/data_model.png)
 
-I will be placing exports of 
+I will be placing exports of reports and provide links here.
 
 &nbsp;
 &nbsp;
