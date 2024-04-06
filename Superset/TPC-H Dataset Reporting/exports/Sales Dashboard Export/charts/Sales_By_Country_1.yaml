@@ -1,0 +1,61 @@
+slice_name: Sales By Country
+description: null
+certified_by: null
+certification_details: null
+viz_type: world_map
+params:
+  datasource: 6__table
+  viz_type: world_map
+  entity: country
+  country_fieldtype: name
+  metric:
+    expressionType: SIMPLE
+    column:
+      advanced_data_type: null
+      certification_details: null
+      certified_by: null
+      column_name: o_totalprice
+      description: null
+      expression: null
+      filterable: true
+      groupby: true
+      id: 87
+      is_certified: false
+      is_dttm: false
+      python_date_format: null
+      type: DECIMAL
+      type_generic: 0
+      verbose_name: null
+      warning_markdown: null
+    aggregate: SUM
+    sqlExpression: null
+    datasourceWarning: false
+    hasCustomLabel: false
+    label: SUM(o_totalprice)
+    optionName: metric_wy34rnra84_o5oy5vc8af
+  adhoc_filters:
+  - clause: WHERE
+    subject: l_shipdate
+    operator: TEMPORAL_RANGE
+    comparator: No filter
+    expressionType: SIMPLE
+  row_limit: 10000
+  max_bubble_size: '25'
+  color_picker:
+    r: 0
+    g: 122
+    b: 135
+    a: 1
+  color_by: metric
+  linear_color_scheme: echarts_gradient
+  color_scheme: supersetColors
+  y_axis_format: SMART_NUMBER
+  extra_form_data: {}
+  dashboards: []
+query_context: '{"datasource":{"id":6,"type":"table"},"force":false,"queries":[{"filters":[{"col":"l_shipdate","op":"TEMPORAL_RANGE","val":"No
+  filter"}],"extras":{"having":"","where":""},"applied_time_extras":{},"columns":[],"metrics":[{"expressionType":"SIMPLE","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"o_totalprice","description":null,"expression":null,"filterable":true,"groupby":true,"id":87,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"DECIMAL","type_generic":0,"verbose_name":null,"warning_markdown":null},"aggregate":"SUM","sqlExpression":null,"datasourceWarning":false,"hasCustomLabel":false,"label":"SUM(o_totalprice)","optionName":"metric_wy34rnra84_o5oy5vc8af"}],"annotation_layers":[],"row_limit":10000,"series_limit":0,"order_desc":true,"url_params":{},"custom_params":{},"custom_form_data":{}}],"form_data":{"datasource":"6__table","viz_type":"world_map","entity":"country","country_fieldtype":"name","metric":{"expressionType":"SIMPLE","column":{"advanced_data_type":null,"certification_details":null,"certified_by":null,"column_name":"o_totalprice","description":null,"expression":null,"filterable":true,"groupby":true,"id":87,"is_certified":false,"is_dttm":false,"python_date_format":null,"type":"DECIMAL","type_generic":0,"verbose_name":null,"warning_markdown":null},"aggregate":"SUM","sqlExpression":null,"datasourceWarning":false,"hasCustomLabel":false,"label":"SUM(o_totalprice)","optionName":"metric_wy34rnra84_o5oy5vc8af"},"adhoc_filters":[{"clause":"WHERE","subject":"l_shipdate","operator":"TEMPORAL_RANGE","comparator":"No
+  filter","expressionType":"SIMPLE"}],"row_limit":10000,"max_bubble_size":"25","color_picker":{"r":0,"g":122,"b":135,"a":1},"color_by":"metric","linear_color_scheme":"echarts_gradient","color_scheme":"supersetColors","y_axis_format":"SMART_NUMBER","extra_form_data":{},"dashboards":[],"force":false,"result_format":"json","result_type":"full"},"result_format":"json","result_type":"full"}'
+cache_timeout: null
+uuid: 5345890c-c20d-4b0f-bebc-4c60d6718ccc
+version: 1.0.0
+dataset_uuid: 1c8897da-06a6-4bc4-bf2e-b053ba7afe1a

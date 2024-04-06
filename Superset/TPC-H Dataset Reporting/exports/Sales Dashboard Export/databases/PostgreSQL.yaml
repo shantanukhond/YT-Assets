@@ -1,0 +1,16 @@
+database_name: PostgreSQL
+sqlalchemy_uri: postgres://abcd:XXXXXXXXXX@rain.db.elephantsql.com/abcd
+cache_timeout: null
+expose_in_sqllab: true
+allow_run_async: true
+allow_ctas: false
+allow_cvas: false
+allow_dml: false
+allow_file_upload: false
+extra:
+  metadata_params: {}
+  engine_params: {}
+  metadata_cache_timeout: {}
+  schemas_allowed_for_file_upload: []
+uuid: fdd98e49-beec-4dd3-acfc-b2837d65da9f
+version: 1.0.0
