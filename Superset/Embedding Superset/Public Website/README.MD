@@ -35,9 +35,9 @@ Once this is added restart superset. You should find Role named `Public` in List
 > For me this Role was created without any permission so I deleted this role and copied `Gamma` Role and renamed it to `Public` 
 
 Now to add dashboard permission we need to add dataset permission in this public role. You can just type `id` in search bar in permissions in role to get list of all Datasets as shown in screenshot below 
-
+<p align="center">
 <img src="./resources/DatasetPermissions.png" align="center" height="200" >
-
+</p>
 Once permission is added you can open dashboard and click on 3 horizontal dots adjacent to EDIT DASHBOARD.
 click on Share and "Copy permalink to clipboard" 
 
