@@ -18,8 +18,9 @@ Following are the resources that you can refer:
     3.  [Database Connection](Superset/Database%20Connections/README.md) ([Youttube Video](https://youtu.be/oemEAZWcpf8))
     4.  [Report Theme](Superset/Report%20Theme/README.md) ([Youtube Video](https://youtu.be/tMp-65MyuU8))
     5.  [SQL Lab HandsOn](Superset/World%20Population%20Reporting/README.md) ([Youtube Video](https://youtu.be/NxhJUt_cY30))
-    6.  [Embedding Superset Dashboard In Public Website](./Superset/Embedding%20Superset/Public%20Website/README.MD) ([Youtube Video]())
-
+    6.  [Creating Dashboard with World Map, Pie Chart, Calendar Heatmap, Big Number with Trendline using TPC-H 1GB Dataset](Superset/TPC-H%20Dataset%20Reporting/README.md) ([Youtube Video](https://youtu.be/vA7wJNRUoEc))
+    7.  [Embedding Superset Dashboard In Public Website](./Superset/Embedding%20Superset/Public%20Website/README.MD) ([Youtube Video]())
+    
 
 &nbsp;
 &nbsp;
