@@ -71,7 +71,7 @@
 ```
 
 > [!WARNING]  
-> Admin creds should not be used in Angular code directly!
+> Admin creds should not be used in Angular code directly! You should ideally create service say lambda where your creds are stored and then according to the user you should create Guest user Token using rls if needed.
 
 
 &nbsp;
