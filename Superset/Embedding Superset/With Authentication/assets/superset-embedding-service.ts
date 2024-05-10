@@ -42,6 +42,7 @@ export class SupersetEmbedService {
               "id": this.dashboardId,
             }
           ],
+          "rls":[],
           "user": {
             "username": "report-viewer",
             "first_name": "report-viewer",
