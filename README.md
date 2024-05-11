@@ -18,8 +18,13 @@ Following are the resources that you can refer:
     4.  [Report Theme](Superset/Report%20Theme/README.md) ([Youtube Video](https://youtu.be/tMp-65MyuU8))
     5.  [SQL Lab HandsOn](Superset/World%20Population%20Reporting/README.md) ([Youtube Video](https://youtu.be/NxhJUt_cY30))
     6.  [Creating Dashboard with World Map, Pie Chart, Calendar Heatmap, Big Number with Trend line using TPC-H 1GB Dataset](Superset/TPC-H%20Dataset%20Reporting/README.md) ([Youtube Video](https://youtu.be/vA7wJNRUoEc))
-    7.  [Embedding Superset Dashboard In Public Website](./Superset/Embedding%20Superset/Public%20Website/README.MD) ([Youtube Video]())
-    8.  [Embedding Superset Dashboard with Authentication](./Superset/Embedding%20Superset/With%20Authentication/README.md)
+    7.  [Embedding Superset Dashboard In Public Website](./Superset/Embedding%20Superset/Public%20Website/README.MD) ([Youtube Video](https://youtu.be/SU0JyAgvucA))
+    8.  [Configuration for embedding Superset Dashboard with Authentication](./Superset/Embedding%20Superset/With%20Authentication/README.md)([Youtube Video]())
+    9.  [Embedding Apache Superset in Angular application](./Superset/Embedding%20Superset/With%20Authentication/README.md)([Youtube Video]())
+    9.  [Embedding Apache Superset in React application](./Superset/Embedding%20Superset/With%20Authentication/README.md)([Youtube Video]())
+    
+2. Superset Enterprise level Architecture
+    1. [Apache Superset Enterprise level architecture description](./Superset/Superset%20Enterprise%20Architecture/README.md)
     
 
 &nbsp;
