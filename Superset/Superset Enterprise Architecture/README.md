@@ -42,6 +42,4 @@ Let me quickly explain why I am calling it enterprise level architecture.
 &nbsp;
 &nbsp;
 
-Credits: For Angular Code this helped me-> https://medium.com/@chaudharypushpendra.11.10.2000/embedding-of-apache-superset-dashboard-in-the-mifos-initiative-angular-web-app-b9259f1f1f1b
-
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/shantanukhond)
