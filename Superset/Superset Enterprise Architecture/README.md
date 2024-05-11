@@ -16,10 +16,32 @@ Let me quickly explain why I am calling it enterprise level architecture.
 
 * For storing metadata we already have created one database that is separate from vm and also here as well we can leverage RDS that can scale up and scale down.
 
-> [INFORMATION] 
+> [!NOTE] 
 > Now this part is a bit surprising if you are new to asynchronous tasks. I guess writing here is going to be difficult but I will try.
 
 * When any query will run in superset and async execution is enabled for database. Superset will inform redis about task and it will add this task into queue to be picked up by worker. Celery worker will pickup task from queue and perform all the operations on it. Once executed it will put result back into redis result backend to be picked-up by superset.
 
-> [INFORMATION] 
-> This part is actually needs to be clear when we implement usually I get questions like- How superset knows there is any worker running and ans is it does not have even a slight clue if there is any worker. If there are no workers it will just wait and wait and wait.
+> [!TIP] 
+> This part is actually needs to be clear when we implement usually I get questions like
+> How superset knows there is any worker running and ans is <b>It does not have even a slight clue if there is any worker. If there are no workers it will just wait and wait and wait.</b>
+
+
+> [!IMPORTANT]
+> IF YOU FEEL SOMETHING IS NOT CORRECT OR NOT CLEAR YOU CAN UPDATE AND SEND ME PULL REQUEST TO MERGE IT. I AM TRYING TO EXPLAIN AS I EXPLAINED IT TO MY TEAM SO HOPEFULLY IT WILL BE CLEAR.
+
+
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+
+##### Let's Learn Together! 📖😊
+
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+
+Credits: For Angular Code this helped me-> https://medium.com/@chaudharypushpendra.11.10.2000/embedding-of-apache-superset-dashboard-in-the-mifos-initiative-angular-web-app-b9259f1f1f1b
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/shantanukhond)
