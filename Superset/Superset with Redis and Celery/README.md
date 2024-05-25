@@ -128,65 +128,65 @@ sudo apt install redis-server
 
 
 * Please replace YOUR_OWN_RANDOM_GENERATED_SECRET_KEY in above file with the code returned by following command
-```
-openssl rand -base64 42
-```
+    ```
+    openssl rand -base64 42
+    ```
 
 
 
 * Once Done let us inititlize database with following commands 
 
-```
-# Create an admin user in your metadata database (use `admin` as username to be able to load the examples)
-export FLASK_APP=superset
+    ```
+    # Create an admin user in your metadata database (use `admin` as username to be able to load the examples)
+    export FLASK_APP=superset
 
-superset db upgrade
+    superset db upgrade
 
-superset fab create-admin
+    superset fab create-admin
 
-# As this is going to be production I have commented load example part but if you need you can run this
-# superset load_examples
+    # As this is going to be production I have commented load example part but if you need you can run this
+    # superset load_examples
 
-# Create default roles and permissions
-superset init
+    # Create default roles and permissions
+    superset init
 
-```
+    ```
 
 * Now Our environment is ready lets try running it..
 To run superset I have created a sh script that you can run in order to run the server. To create create script using following command.
 
-```
-nano run_superset.sh
-```
+    ```
+    nano run_superset.sh
+    ```
 
-and paste following code in it.
+    and paste following code in it.
 
-```
-#!/bin/bash
-export SUPERSET_CONFIG_PATH=/app/superset/superset_config.py
- . /app/superset/superset_env/bin/activate
-gunicorn \
-      -w 10 \
-      -k gevent \
-      --timeout 120 \
-      -b  0.0.0.0:8088 \
-      --limit-request-line 0 \
-      --limit-request-field_size 0 \
-      --statsd-host localhost:8125 \
-      "superset.app:create_app()"
-```
+    ```
+    #!/bin/bash
+    export SUPERSET_CONFIG_PATH=/app/superset/superset_config.py
+    . /app/superset/superset_env/bin/activate
+    gunicorn \
+        -w 10 \
+        -k gevent \
+        --timeout 120 \
+        -b  0.0.0.0:8088 \
+        --limit-request-line 0 \
+        --limit-request-field_size 0 \
+        --statsd-host localhost:8125 \
+        "superset.app:create_app()"
+    ```
 
 
 * In order to run it we need to grant it run permission. To do that lets run following command.
-```
-chmod +x run_superset.sh
-```
+    ```
+    chmod +x run_superset.sh
+    ```
 
  * Lets run and test if it works?
 
-```
-sh run_superset.sh
-```
+    ```
+    sh run_superset.sh
+    ```
 
 * check if you are able to login using admin creds on server-ip-address:8088. If everything is working fine then we can go ahead and create service that will start automatically as soon as server starts or in case it reboots.
 
@@ -196,102 +196,102 @@ sh run_superset.sh
 
 Lets create service called superset using following command
 
-```
-sudo nano /etc/systemd/system/superset.service
-```
+    ```
+    sudo nano /etc/systemd/system/superset.service
+    ```
 
 paste following code in it 
 
-```
-[Unit]
-Description = Apache Superset Webserver Daemon
-After = network.target
+    ```
+    [Unit]
+    Description = Apache Superset Webserver Daemon
+    After = network.target
 
-[Service]
-PIDFile = /app/superset/superset-webserver.PIDFile
-Environment=SUPERSET_HOME=/app/superset
-Environment=PYTHONPATH=/app/superset
-WorkingDirectory = /app/superset
-limit-re>
-ExecStart = /app/superset/run_superset.sh
-ExecStop = /bin/kill -s TERM $MAINPID
+    [Service]
+    PIDFile = /app/superset/superset-webserver.PIDFile
+    Environment=SUPERSET_HOME=/app/superset
+    Environment=PYTHONPATH=/app/superset
+    WorkingDirectory = /app/superset
+    limit-re>
+    ExecStart = /app/superset/run_superset.sh
+    ExecStop = /bin/kill -s TERM $MAINPID
 
 
-[Install]
-WantedBy=multi-user.target
+    [Install]
+    WantedBy=multi-user.target
 
-```
+    ```
 
 once copied run following command to enable and start service
 
-```
-systemctl daemon-reload
-sudo systemctl enable superset.service
-sudo systemctl start superset.service
-```
+    ```
+    systemctl daemon-reload
+    sudo systemctl enable superset.service
+    sudo systemctl start superset.service
+    ```
 
 
 
 #### Run and Test Celery 
 * To run celery I have created a sh script that you can run in order to run the server. To create create script using following command.
 
-```
-nano run_celery.sh
-```
+    ```
+    nano run_celery.sh
+    ```
 
 and paste following code in it.
 
-```
-#!/bin/bash
-export SUPERSET_CONFIG_PATH=/app/superset/superset_config.py
- . /app/superset/superset_env/bin/activate
+    ```
+    #!/bin/bash
+    export SUPERSET_CONFIG_PATH=/app/superset/superset_config.py
+    . /app/superset/superset_env/bin/activate
 
-celery --app=superset.tasks.celery_app:app worker --pool=prefork -O fair -c 4 &
-celery --app=superset.tasks.celery_app:app beat
+    celery --app=superset.tasks.celery_app:app worker --pool=prefork -O fair -c 4 &
+    celery --app=superset.tasks.celery_app:app beat
 
-```
+    ```
 
 
 * In order to run it we need to grant it run permission. To do that lets run following command.
-```
-chmod +x run_celery.sh
-```
+    ```
+    chmod +x run_celery.sh
+    ```
 
  * Lets run and test if it works?
 
-```
-sh run_celery.sh
-```
+    ```
+    sh run_celery.sh
+    ```
 
 * Create Celery service edit/create file `sudo nano /etc/systemd/system/celery.service` and paste following code in it
 
-```
-[Unit]
-Description = Apache Celery worker Daemon
-After = network.target
+    ```
+    [Unit]
+    Description = Apache Celery worker Daemon
+    After = network.target
 
-[Service]
-PIDFile = /app/superset/celery.PIDFile
-Environment=SUPERSET_HOME=/app/superset
-Environment=PYTHONPATH=/app/superset
-WorkingDirectory = /app/superset
-ExecStart = /app/superset/run_celery.sh
-ExecStop = /bin/kill -s TERM $MAINPID
+    [Service]
+    PIDFile = /app/superset/celery.PIDFile
+    Environment=SUPERSET_HOME=/app/superset
+    Environment=PYTHONPATH=/app/superset
+    WorkingDirectory = /app/superset
+    ExecStart = /app/superset/run_celery.sh
+    ExecStop = /bin/kill -s TERM $MAINPID
 
 
-[Install]
-WantedBy=multi-user.target
+    [Install]
+    WantedBy=multi-user.target
 
-```
+    ```
 
 
 once copied run following command to enable and start service
 
-```
-systemctl daemon-reload
-sudo systemctl enable celery.service
-sudo systemctl start celery.service
-```
+    ```
+    systemctl daemon-reload
+    sudo systemctl enable celery.service
+    sudo systemctl start celery.service
+    ```
 
 
 ### YEY! Your Enterprise Server is Up and running you can test it by restarting the server...
