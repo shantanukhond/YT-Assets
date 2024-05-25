@@ -239,7 +239,7 @@ once copied run following command to enable and start service
     nano run_celery.sh
     ```
 
-and paste following code in it.
+    and paste following code in it.
 
     ```
     #!/bin/bash
