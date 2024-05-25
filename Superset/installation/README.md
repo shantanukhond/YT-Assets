@@ -8,7 +8,7 @@
 ```
 sudo apt update -y & sudo apt upgrade -y
 ```
-* Install dependancies
+* Install dependencies
 
 ```
 sudo apt-get install build-essential libssl-dev libffi-dev python3-dev python3-pip libsasl2-dev libldap2-dev default-libmysqlclient-dev python3.10-venv
@@ -32,7 +32,7 @@ python3 -m venv superset_env
 pip install --upgrade setuptools pip
 ```
 
-* Install Required dependancies
+* Install Required dependencies
 
 ```
 pip install pillow

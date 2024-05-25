@@ -30,9 +30,11 @@ Following are the resources that you can refer:
 
 &nbsp;
 &nbsp;
+#### Any Question? Feel free to mail me on [contact@shantanukhond.me](mailto://contact@shantanukhond.me)
 &nbsp;
 &nbsp;
-
+&nbsp;
+&nbsp;
 ##### Let's Learn Together! 📖😊
 
 

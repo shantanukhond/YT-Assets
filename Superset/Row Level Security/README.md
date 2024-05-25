@@ -20,3 +20,17 @@ This is kind of a inverse filter. That means where clause will be applied to all
 
 #### What is "Group Key"?
 If user is part of multiple RLS groups then if Group Key of these groups will come into consideration. If group key is same then filters will be OR in where clause and if the key is different then AND operation will be applied on filters.
+
+
+&nbsp;
+&nbsp;
+#### Any Question? Feel free to mail me on [contact@shantanukhond.me](mailto://contact@shantanukhond.me)
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+
+##### Let's Learn Together! 📖😊
+
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/shantanukhond)
