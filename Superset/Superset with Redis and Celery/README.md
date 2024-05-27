@@ -281,13 +281,14 @@ paste following code in it
     ```
 
 
-once copied run following command to enable and start service
+    once copied run following command to enable and start service
 
     
+    ```
     systemctl daemon-reload
     sudo systemctl enable celery.service
     sudo systemctl start celery.service
-    
+    ```
 
 ### YEY! Your Enterprise Server is Up and running you can test it by restarting the server...
 If you have any issues you can contact me on [contact@shantanukhond.me](mailto://contact@shantanukhond.me) . 
