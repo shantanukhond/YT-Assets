@@ -63,6 +63,7 @@ sudo apt install redis-server
     pip install psycopg2
     pip install gunicorn
     pip install celery
+    pip install gevent
     ```
 * Create superset config file and set environment variable
     ```
@@ -196,13 +197,10 @@ To run superset I have created a sh script that you can run in order to run the 
 
 Lets create service called superset using following command
 
-    ```
     sudo nano /etc/systemd/system/superset.service
-    ```
-
+    
 paste following code in it 
 
-    ```
     [Unit]
     Description = Apache Superset Webserver Daemon
     After = network.target
@@ -220,16 +218,14 @@ paste following code in it
     [Install]
     WantedBy=multi-user.target
 
-    ```
+    
 
-once copied run following command to enable and start service
+    once copied run following command to enable and start service
 
-    ```
     systemctl daemon-reload
     sudo systemctl enable superset.service
     sudo systemctl start superset.service
-    ```
-
+    
 
 
 #### Run and Test Celery 
@@ -241,7 +237,6 @@ once copied run following command to enable and start service
 
     and paste following code in it.
 
-    ```
     #!/bin/bash
     export SUPERSET_CONFIG_PATH=/app/superset/superset_config.py
     . /app/superset/superset_env/bin/activate
@@ -249,8 +244,9 @@ once copied run following command to enable and start service
     celery --app=superset.tasks.celery_app:app worker --pool=prefork -O fair -c 4 &
     celery --app=superset.tasks.celery_app:app beat
 
-    ```
+    
 
+    In above script `-c 4` represents how many worker processes should run in a worker.
 
 * In order to run it we need to grant it run permission. To do that lets run following command.
     ```
@@ -287,12 +283,11 @@ once copied run following command to enable and start service
 
 once copied run following command to enable and start service
 
-    ```
+    
     systemctl daemon-reload
     sudo systemctl enable celery.service
     sudo systemctl start celery.service
-    ```
-
+    
 
 ### YEY! Your Enterprise Server is Up and running you can test it by restarting the server...
 If you have any issues you can contact me on [contact@shantanukhond.me](mailto://contact@shantanukhond.me) . 

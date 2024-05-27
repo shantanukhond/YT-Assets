@@ -26,7 +26,7 @@ Following are the resources that you can refer:
     
 2. Superset Enterprise level Architecture
     1. [Apache Superset Enterprise level architecture description](./Superset/Superset%20Enterprise%20Architecture/README.md)([Youtube Video](https://youtu.be/M4hoGtyRvKk))
-    2. [Installing Apache Superset with Redis and Celery](./Superset/Superset%20with%20Redis%20and%20Celery/README.md)
+    2. [Installing Apache Superset with Redis and Celery](./Superset/Superset%20with%20Redis%20and%20Celery/README.md)([Youtube Video](https://youtu.be/zL7_5EQ88IU))
     
 
 &nbsp;
