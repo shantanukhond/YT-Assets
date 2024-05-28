@@ -1,5 +1,5 @@
 ```markdown
-# Installation of dbgen for generating TPC-H data
+## Installation of dbgen for generating TPC-H data
 
 ## Clone the Repository
 ```bash
