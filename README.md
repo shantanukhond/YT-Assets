@@ -22,10 +22,6 @@
     - [Embedding Apache Superset in Angular Application](./Superset/Embedding%20Superset/With%20Authentication/README.md) [![YouTube Video](https://img.shields.io/badge/Watch-Video-red?logo=youtube)]()
     - [Embedding Apache Superset in React Application](./Superset/Embedding%20Superset/With%20Authentication/README.md) [![YouTube Video](https://img.shields.io/badge/Watch-Video-red?logo=youtube)]()
 
-2. **Superset Enterprise Level Architecture**
-    - [Apache Superset Enterprise Level Architecture Description](./Superset/Superset%20Enterprise%20Architecture/README.md)
-
-&nbsp;
 
 ### Let's Learn Together! 📖😊
 
