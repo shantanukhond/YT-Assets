@@ -1,4 +1,4 @@
-# Valkey Documentation
+# Valkey Installation Guide
 
 ## **What is Valkey?**
 
