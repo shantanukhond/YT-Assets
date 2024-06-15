@@ -18,9 +18,13 @@
     - [SQL Lab Hands-On](Superset/World%20Population%20Reporting/README.md) [![YouTube Video](https://img.shields.io/badge/Watch-Video-red?logo=youtube)](https://youtu.be/NxhJUt_cY30)
     - [Creating Dashboard with World Map, Pie Chart, Calendar Heatmap, Big Number with Trend Line using TPC-H 1GB Dataset](Superset/TPC-H%20Dataset%20Reporting/README.md) [![YouTube Video](https://img.shields.io/badge/Watch-Video-red?logo=youtube)](https://youtu.be/vA7wJNRUoEc)
     - [Embedding Superset Dashboard in Public Website](./Superset/Embedding%20Superset/Public%20Website/README.MD) [![YouTube Video](https://img.shields.io/badge/Watch-Video-red?logo=youtube)](https://youtu.be/SU0JyAgvucA)
-    - [Configuration for Embedding Superset Dashboard with Authentication](./Superset/Embedding%20Superset/With%20Authentication/README.md) [![YouTube Video](https://img.shields.io/badge/Watch-Video-red?logo=youtube)]()
-    - [Embedding Apache Superset in Angular Application](./Superset/Embedding%20Superset/With%20Authentication/README.md) [![YouTube Video](https://img.shields.io/badge/Watch-Video-red?logo=youtube)]()
-    - [Embedding Apache Superset in React Application](./Superset/Embedding%20Superset/With%20Authentication/README.md) [![YouTube Video](https://img.shields.io/badge/Watch-Video-red?logo=youtube)]()
+    - [Configuration for Embedding Superset Dashboard with Authentication](./Superset/Embedding%20Superset/With%20Authentication/README.md) [![YouTube Video](https://img.shields.io/badge/Watch-Video-red?logo=youtube)](https://youtu.be/SU0JyAgvucA)
+    - [Embedding Apache Superset in Angular Application](./Superset/Embedding%20Superset/With%20Authentication/README.md) [![YouTube Video](https://img.shields.io/badge/Watch-Video-red?logo=youtube)](https://youtu.be/Idy22o_vD0I)
+    - [Embedding Apache Superset in React Application](./Superset/Embedding%20Superset/With%20Authentication/README.md) [![YouTube Video](https://img.shields.io/badge/Watch-Video-red?logo=youtube)](https://youtu.be/rlv7Rtrtyjw)
+2. Superset Enterprise level Architecture
+    - [Apache Superset Enterprise level architecture description](./Superset/Superset%20Enterprise%20Architecture/README.md)([![YouTube Video](https://img.shields.io/badge/Watch-Video-red?logo=youtube)](https://youtu.be/M4hoGtyRvKk))
+    - [Installing Apache Superset with Redis and Celery](./Superset/Superset%20with%20Redis%20and%20Celery/README.md)([![YouTube Video](https://img.shields.io/badge/Watch-Video-red?logo=youtube)](https://youtu.be/zL7_5EQ88IU))
+
 
 
 ### Let's Learn Together! 📖😊
