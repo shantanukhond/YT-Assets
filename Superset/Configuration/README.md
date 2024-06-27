@@ -35,7 +35,7 @@ LOGO_RIGHT_TEXT = "My Department Name"
 To set up the favicon, place the favicon icon in the `/app/superset/superset_env/lib/python3.8/site-packages/superset/static/assets/images/your_app_name/favicon/` folder, copy the path from `static/assets/images/your_app_name/favicon/favicon.png`, and put it in the configuration file as shown below:
 
 ```python
-FAVICONS = [{"href": "static/assets/images/your_app_name/favicon/favicon.png"}]
+FAVICONS = [{"href": "/static/assets/images/your_app_name/favicon/favicon.png"}]
 ```
 
 ### Changing Loading GIF
