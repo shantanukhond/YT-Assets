@@ -21,6 +21,7 @@
     - [Configuration for Embedding Superset Dashboard with Authentication](./Superset/Embedding%20Superset/With%20Authentication/README.md) [![YouTube Video](https://img.shields.io/badge/Watch-Video-red?logo=youtube)](https://youtu.be/SU0JyAgvucA)
     - [Embedding Apache Superset in Angular Application](./Superset/Embedding%20Superset/With%20Authentication/README.md) [![YouTube Video](https://img.shields.io/badge/Watch-Video-red?logo=youtube)](https://youtu.be/Idy22o_vD0I)
     - [Embedding Apache Superset in React Application](./Superset/Embedding%20Superset/With%20Authentication/README.md) [![YouTube Video](https://img.shields.io/badge/Watch-Video-red?logo=youtube)](https://youtu.be/rlv7Rtrtyjw)
+    - [Superset Alerts and Reports i.e. Scheduling Apache Superset reports](./Superset/Superset%20Report%20Scheduling/README.md) [![YouTube Video](https://img.shields.io/badge/Watch-Video-red?logo=youtube)]()
 2. Superset Enterprise level Architecture
     - [Apache Superset Enterprise level architecture description](./Superset/Superset%20Enterprise%20Architecture/README.md) [![YouTube Video](https://img.shields.io/badge/Watch-Video-red?logo=youtube)](https://youtu.be/M4hoGtyRvKk)
     - [Installing Apache Superset with Redis and Celery](./Superset/Superset%20with%20Redis%20and%20Celery/README.md)[![YouTube Video](https://img.shields.io/badge/Watch-Video-red?logo=youtube)](https://youtu.be/zL7_5EQ88IU)
