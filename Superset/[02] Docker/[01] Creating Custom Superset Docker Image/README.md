@@ -21,9 +21,13 @@
 
 4. Open `Dockerfile` find `WORKDIR /app` for me it is on line 65 (In future it might change). Add following code below it
     ```
-    
+
     ```
 
+5. Creating docker image using following command
+    ```
+    docker build -t shan-superset .
+    ```
 
-3. Need to do few changes to get our image running 
-    -   First open `docker-compose-non-dev.yml` 
+3. Need to do few changes to get our image running open `docker-compose-non-dev.yml` 
+    and change image name to shan-superset
