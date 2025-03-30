@@ -1,13 +1,5 @@
 ﻿## 📊 Learn Reporting, SQL, Coding, and DataViz - Resources for YouTube Channel [![YouTube Channel](https://img.shields.io/badge/YouTube-Channel-red?logo=youtube)](https://www.youtube.com/@ShantanuKhond)
 
-## [Archival Notice]
-
-We are transitioning this repository to a more user-friendly and visually appealing web portal: https://docs.shantanukhond.me/apache-superset/index.html. The migration is currently in progress. Once completed, this repository will be archived.
-
-We deeply appreciate all the support and encouragement we have received, which has inspired us to create this new portal. We hope it will continue to assist everyone in learning and growing.
-
-Thank you for your understanding and support!
-
 
 ### 🎥 Planned Videos
 [![Planned Videos Google Sheet](https://img.shields.io/badge/Google%20Sheet-Planned%20Videos-brightgreen?logo=google-sheets)](https://docs.google.com/spreadsheets/d/1k9TS0UxWWzKnZr_SvLsT_cnZm_UaMDvU2AEjU71DAZs/edit?usp=sharing)
@@ -40,10 +32,12 @@ Thank you for your understanding and support!
     3. Superset Docker
         - [Superset Docker custom superset Image creation with logo and AppName]()
 
-3. Valkey
+1. Valkey
     -   [Installation of Valkey](./Valkey/1.0%20Installation/README.md)
 
-
+1. Ai Agent with ChatGpt
+    - [PRIMER](./AiAgent/PRIMER%20With%20ChatGPT.md)
+    
 
 ### Let's Learn Together! 📖😊
 

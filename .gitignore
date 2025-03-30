@@ -2,3 +2,5 @@
 ._.DS_Store
 **/.DS_Store
 **/._.DS_Store
+.aiagent
+__pycache__
