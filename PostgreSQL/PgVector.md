@@ -135,6 +135,16 @@ networks:
 
 
 ### Loading the data into table using script
+```bash
+cd PostgreSQL/pgvector
+python -m venv venv
+source venv/bin/activate
+cp .env.example .env
+pip install -r requirements.txt
+python PostgreSQL/pgvector/scrape_airflow_docs.py
 ```
 
-```
+
+
+
+
