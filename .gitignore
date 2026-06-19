@@ -4,3 +4,7 @@
 **/._.DS_Store
 .aiagent
 __pycache__
+**/venv/
+**/node_modules/
+**/db.sqlite3
+**/.env

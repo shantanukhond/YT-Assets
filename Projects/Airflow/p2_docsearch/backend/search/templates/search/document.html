@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ document.title|default:document.source_url }} — DocSearch</title>
+    <link rel="stylesheet" href="{% static 'search/css/style.css' %}" />
+  </head>
+  <body>
+    <div class="document-page">
+      <header class="document-header">
+        <a class="back-link" href="/">← DocSearch</a>
+      </header>
+
+      <main class="document-main">
+        <h1>{{ document.title|default:document.source_url }}</h1>
+        <a
+          class="document-source"
+          href="{{ document.source_url }}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {{ document.source_url }}
+        </a>
+        <div class="content-body">{{ document.content }}</div>
+      </main>
+    </div>
+  </body>
+</html>

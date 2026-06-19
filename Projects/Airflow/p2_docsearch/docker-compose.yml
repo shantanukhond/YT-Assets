@@ -1,0 +1,17 @@
+services:
+  web:
+    build: ./backend
+    container_name: docsearch-web
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    environment:
+      POSTGRES_HOST: postgres
+      OLLAMA_HOST: http://ollama:11434
+    networks:
+      - pgvector_net
+
+networks:
+  pgvector_net:
+    external: true

@@ -1,0 +1,11 @@
+# Python
+backend/venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/*.py[cod]
+backend/db.sqlite3
+backend/.env
+
+# OS / IDE
+.DS_Store
+.env

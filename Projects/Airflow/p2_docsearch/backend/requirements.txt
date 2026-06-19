@@ -1,0 +1,8 @@
+Django==4.2.30
+python-dotenv==1.2.1
+psycopg2-binary==2.9.10
+pgvector==0.4.1
+ollama==0.4.7
+sqlparse==0.5.5
+asgiref==3.11.1
+typing_extensions==4.15.0

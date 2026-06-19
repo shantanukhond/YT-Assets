@@ -1,0 +1,23 @@
+.app {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: system-ui, sans-serif;
+}
+
+.card {
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.error {
+  color: #b00020;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+}

@@ -37,6 +37,9 @@
 
 1. Ai Agent with ChatGpt
     - [PRIMER](./AiAgent/PRIMER%20With%20ChatGPT.md)
+
+1. PostgreSQL
+    - [PostgreSQL as Vector Database with pgvector extension](./PostgreSQL/pgvector%20as%20Vector%20Database/README.md)
     
 
 ### Let's Learn Together! 📖😊
