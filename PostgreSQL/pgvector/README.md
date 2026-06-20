@@ -4,62 +4,71 @@ Use standard **PostgreSQL** as your database, then enable the **pgvector** exten
 
 ## How it works
 
-1. **PostgreSQL** — official `postgres:16` image runs the database
-2. **pgvector extension** — installed in the Dockerfile (`postgresql-16-pgvector` package)
-3. **Enable in database** — `CREATE EXTENSION vector;` runs from `sql/01_enable_extension.sql`
-4. **Vector tables** — `sql/02_create_tables.sql` creates the `documents` table and HNSW index
-5. **App** — Ollama + Python app run in a separate compose file under `app/`
+1. **PostgreSQL** — official `postgres:16` image with pgvector installed via Dockerfile
+2. **Enable extension** — run `CREATE EXTENSION vector;` manually in `psql`
+3. **Ollama** — separate compose file pulls the embedding model
+4. **Scrape script** — creates the `documents` table and loads Airflow docs with embeddings
 
 ## Prerequisites
 
 - Docker and Docker Compose
+- Python 3.10+
 
-## 1. Start PostgreSQL and pgvector
+## 1. Start PostgreSQL
 
 From this folder:
 
 ```bash
-cd "PostgreSQL/pgvector as Vector Database"
+cd PostgreSQL/pgvector
 docker compose up -d --build
 ```
 
-Connect to PostgreSQL:
+Connect and enable pgvector:
 
 ```bash
 psql postgresql://postgres:postgres@localhost:5432/vectordb
 ```
 
-Verify PostgreSQL and pgvector:
+```sql
+CREATE EXTENSION IF NOT EXISTS vector;
+```
+
+Or from the shell:
+
+```bash
+psql postgresql://postgres:postgres@localhost:5432/vectordb -f sql/01_enable_extension.sql
+```
+
+Verify:
 
 ```sql
 SELECT version();
 \dx vector
-\d documents
 ```
 
-To stop and remove containers:
+To stop:
 
 ```bash
 docker compose down
 ```
 
-To reset the database and re-run init scripts:
+To reset the database:
 
 ```bash
 docker compose down -v
 docker compose up -d --build
 ```
 
-## 2. Start the app (Ollama + Python)
+## 2. Start Ollama
 
-From the `app` folder:
+From the `ollama` folder:
 
 ```bash
-cd app
-docker compose up -d --build
+cd ollama
+docker compose up -d
 ```
 
-The embedding model is pulled automatically on startup by the `ollama-init` service (`nomic-embed-text` by default). To use a different model, set `OLLAMA_EMBED_MODEL` in `.env`.
+The embedding model is pulled automatically on startup (`nomic-embed-text` by default). Set `OLLAMA_EMBED_MODEL` in `.env` to use a different model.
 
 To pull manually:
 
@@ -67,74 +76,19 @@ To pull manually:
 docker compose exec ollama ollama pull nomic-embed-text
 ```
 
-This runs:
-- **Ollama** — local embedding model (`nomic-embed-text`, 768 dimensions)
-- **App** — Python container connected to PostgreSQL and Ollama over the shared `pgvector_net` network
+## 3. Scrape and store embeddings
 
-Both compose files share the **`pgvector_net`** network, so the app reaches PostgreSQL at `postgres:5432`.
-
-## 3. Store embeddings
+From the `pgvector` folder:
 
 ```bash
-docker compose exec app python embed_documents.py
-```
-
-## 4. Similarity search
-
-```bash
-docker compose exec app python similarity_search.py "What is pgvector?"
-```
-
-### Manual setup (existing PostgreSQL server)
-
-If PostgreSQL is already installed, install pgvector for your version, then run:
-
-```bash
-psql postgresql://postgres:postgres@localhost:5432/vectordb -f sql/01_enable_extension.sql
-psql postgresql://postgres:postgres@localhost:5432/vectordb -f sql/02_create_tables.sql
-```
-
-Inside `psql`, enabling pgvector looks like:
-
-```sql
-CREATE EXTENSION IF NOT EXISTS vector;
-```
-
-### Local Python (without Docker app container)
-
-```bash
-cd app
 python3 -m venv venv
 source venv/bin/activate
+cp .env.example .env
 pip install -r requirements.txt
+python scrape_airflow_docs.py
 ```
 
-Create a `.env` file in the `app` folder:
-
-```
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/vectordb
-OLLAMA_HOST=http://localhost:11434
-OLLAMA_EMBED_MODEL=nomic-embed-text
-EMBEDDING_DIMENSIONS=768
-```
-
-For the smallest embedding model:
-
-```
-OLLAMA_EMBED_MODEL=all-minilm
-EMBEDDING_DIMENSIONS=384
-```
-
-> If you change the model, update `vector(768)` in `sql/02_create_tables.sql` to match and recreate the database volume.
-
-## SQL example
-
-```sql
-SELECT content, embedding <=> '[0.1, 0.2, ...]'::vector AS distance
-FROM documents
-ORDER BY distance
-LIMIT 5;
-```
+The script creates the `documents` table (if missing) and upserts scraped pages with embeddings.
 
 ## Files in this folder
 
@@ -142,14 +96,9 @@ LIMIT 5;
 |------|---------|
 | `Dockerfile` | PostgreSQL 16 + pgvector extension install |
 | `docker-compose.yml` | PostgreSQL database only |
-| `app/docker-compose.yml` | Ollama + Python app |
-| `app/Dockerfile` | App container image |
-| `sql/01_enable_extension.sql` | Enable pgvector extension |
-| `sql/02_create_tables.sql` | Create documents table and index |
-| `app/models/embeddings.py` | Ollama embedding helper |
-| `app/embed_documents.py` | Generate and store embeddings |
-| `app/similarity_search.py` | Query similar documents |
-
-[The app code is available here](./app/)
+| `ollama/docker-compose.yml` | Ollama + model pull on startup |
+| `sql/01_enable_extension.sql` | Enable pgvector extension (run manually) |
+| `scrape_airflow_docs.py` | Create table, scrape docs, store embeddings |
+| `.env.example` | Connection settings for the scrape script |
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/shantanukhond)

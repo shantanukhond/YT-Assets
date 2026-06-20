@@ -10,6 +10,31 @@ load_dotenv()
 
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 OLLAMA_EMBED_MODEL = os.getenv("OLLAMA_EMBED_MODEL", "nomic-embed-text")
+EMBEDDING_DIMENSIONS = int(os.getenv("EMBEDDING_DIMENSIONS", "768"))
+
+
+def ensure_documents_table(conn):
+    with conn.cursor() as cur:
+        cur.execute(
+            f"""
+            CREATE TABLE IF NOT EXISTS documents (
+                id SERIAL PRIMARY KEY,
+                title TEXT,
+                source_url TEXT UNIQUE NOT NULL,
+                content TEXT NOT NULL,
+                embedding vector({EMBEDDING_DIMENSIONS}) NOT NULL,
+                created_at TIMESTAMPTZ DEFAULT NOW()
+            )
+            """
+        )
+        cur.execute(
+            """
+            CREATE INDEX IF NOT EXISTS documents_embedding_idx
+            ON documents
+            USING hnsw (embedding vector_cosine_ops)
+            """
+        )
+    conn.commit()
 
 AIRFLOW_PAGES = [
     "https://airflow.apache.org/docs/apache-airflow/stable/index.html",
@@ -33,6 +58,8 @@ conn = psycopg2.connect(
     password=os.getenv("POSTGRES_PASSWORD", "postgres"),
     dbname=os.getenv("POSTGRES_DB", "vectordb"),
 )
+
+ensure_documents_table(conn)
 
 saved = 0
 

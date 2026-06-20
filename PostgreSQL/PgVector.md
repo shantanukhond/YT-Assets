@@ -19,7 +19,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 ```
 
-### Creating Docker Compose file
+### Creating Docker Compose file (PostgreSQL only)
 
 ```yaml
 services:
@@ -34,8 +34,6 @@ services:
       POSTGRES_DB: vectordb
     volumes:
       - pgvector_data:/var/lib/postgresql/data
-    networks:
-      - pgvector_net
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d vectordb"]
       interval: 5s
@@ -44,36 +42,19 @@ services:
 
 volumes:
   pgvector_data:
-
-networks:
-  pgvector_net:
-    name: pgvector_net
 ```
 
-### Creating extension in the database
+### Creating extension in the database (run manually)
 
 ```sql
 CREATE EXTENSION IF NOT EXISTS vector;
 ```
 
-### Example Table for Storing Embeddings
+The `documents` table is created by `scrape_airflow_docs.py` when you run the scrape script.
 
-```sql
-CREATE TABLE IF NOT EXISTS documents (
-    id SERIAL PRIMARY KEY,
-    title TEXT,
-    source_url TEXT UNIQUE NOT NULL,
-    content TEXT NOT NULL,
-    embedding vector(768) NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
+### Ollama (separate compose file)
 
-CREATE INDEX IF NOT EXISTS documents_embedding_idx
-ON documents
-USING hnsw (embedding vector_cosine_ops);
-```
-
-### Services those I used with Postgres
+See `PostgreSQL/pgvector/ollama/docker-compose.yml`:
 
 ```yaml
 services:
@@ -84,8 +65,6 @@ services:
       - "11434:11434"
     volumes:
       - ollama_data:/root/.ollama
-    networks:
-      - pgvector_net
 
   ollama-init:
     image: ollama/ollama:latest
@@ -94,6 +73,7 @@ services:
       - ollama
     environment:
       OLLAMA_HOST: http://ollama:11434
+      OLLAMA_EMBED_MODEL: ${OLLAMA_EMBED_MODEL:-nomic-embed-text}
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
@@ -101,47 +81,26 @@ services:
         until ollama list >/dev/null 2>&1; do sleep 2; done
         echo "Pulling ${OLLAMA_EMBED_MODEL:-nomic-embed-text}..."
         ollama pull ${OLLAMA_EMBED_MODEL:-nomic-embed-text}
-    networks:
-      - pgvector_net
     restart: "no"
 
-  postgres:
-    build: .
-    container_name: pgvector-demo
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: vectordb
-    volumes:
-      - pgvector_data:/var/lib/postgresql/data
-    networks:
-      - pgvector_net
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d vectordb"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
 volumes:
-  pgvector_data:
   ollama_data:
-
-networks:
-  pgvector_net:
-    name: pgvector_net
 ```
 
 
 ### Loading the data into table using script
+
+1. Start PostgreSQL and enable the extension manually.
+2. Start Ollama: `cd PostgreSQL/pgvector/ollama && docker compose up -d`
+3. Run the scrape script:
+
 ```bash
 cd PostgreSQL/pgvector
 python -m venv venv
 source venv/bin/activate
 cp .env.example .env
 pip install -r requirements.txt
-python PostgreSQL/pgvector/scrape_airflow_docs.py
+python scrape_airflow_docs.py
 ```
 
 
