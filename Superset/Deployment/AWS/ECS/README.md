@@ -5,26 +5,8 @@ No ECR needed.
 
 ## Architecture
 
-```
-Internet
-   │
-   ▼  app.superset.atwish.org (Route53 + ACM)
-┌──────────────────────── VPC ─────────────────────────┐
-│                                                      │
-│  PUBLIC                    PRIVATE APP               │
-│  ┌──────────────┐          ┌──────────────────────┐  │
-│  │ IGW          │          │ ECS (Fargate)        │  │
-│  │ ALB :443 ────┼─────────►│  web / worker / beat │  │
-│  │ NAT Gateway  │          └──────────┬───────────┘  │
-│  └──────────────┘                     │              │
-│                                       ▼              │
-│                            PRIVATE DATA              │
-│                            ┌──────────────────────┐  │
-│                            │ RDS PostgreSQL       │  │
-│                            │ ElastiCache Redis    │  │
-│                            └──────────────────────┘  │
-└──────────────────────────────────────────────────────┘
-```
+![Superset AWS Deployment Architecture](./Superset%20AWS%20Deployment%20Architecture.png)
+
 
 | Subnet | What lives there | Internet |
 |---|---|---|
