@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: superset-beat
+  namespace: superset
+  labels:
+    app: superset-beat
+spec:
+  # NEVER scale beat above 1
+  replicas: 1
+  selector:
+    matchLabels:
+      app: superset-beat
+  template:
+    metadata:
+      labels:
+        app: superset-beat
+    spec:
+      containers:
+        - name: beat
+          image: apache/superset:4.1.1
+          env:
+            - name: SUPERSET_CONFIG_PATH
+              value: /app/pythonpath/superset_config.py
+          envFrom:
+            - secretRef:
+                name: superset-secrets
+          volumeMounts:
+            - name: config
+              mountPath: /app/pythonpath/superset_config.py
+              subPath: superset_config.py
+          command:
+            - /bin/sh
+            - -c
+            - celery --app=superset.tasks.celery_app:app beat --loglevel=INFO
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "250m"
+              memory: "512Mi"
+      volumes:
+        - name: config
+          configMap:
+            name: superset-config

@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: superset-web
+  namespace: superset
+  labels:
+    app: superset-web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: superset-web
+  template:
+    metadata:
+      labels:
+        app: superset-web
+    spec:
+      containers:
+        - name: superset
+          image: apache/superset:4.1.1
+          ports:
+            - containerPort: 8088
+          env:
+            - name: SUPERSET_CONFIG_PATH
+              value: /app/pythonpath/superset_config.py
+          envFrom:
+            - secretRef:
+                name: superset-secrets
+          volumeMounts:
+            - name: config
+              mountPath: /app/pythonpath/superset_config.py
+              subPath: superset_config.py
+          command:
+            - /bin/sh
+            - -c
+            - |
+              superset db upgrade
+              (superset fab create-admin \
+                --username "$SUPERSET_ADMIN_USERNAME" \
+                --firstname Admin \
+                --lastname User \
+                --email "$SUPERSET_ADMIN_EMAIL" \
+                --password "$SUPERSET_ADMIN_PASSWORD" || true)
+              superset init
+              /usr/bin/run-server.sh
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8088
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8088
+            initialDelaySeconds: 60
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "1"
+              memory: "2Gi"
+      volumes:
+        - name: config
+          configMap:
+            name: superset-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: superset-web
+  namespace: superset
+spec:
+  type: ClusterIP
+  selector:
+    app: superset-web
+  ports:
+    - port: 8088
+      targetPort: 8088
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: superset-web
+  namespace: superset
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: superset-web
+  minReplicas: 2
+  maxReplicas: 6
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70

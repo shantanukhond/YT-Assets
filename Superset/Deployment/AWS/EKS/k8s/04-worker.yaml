@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: superset-worker
+  namespace: superset
+  labels:
+    app: superset-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: superset-worker
+  template:
+    metadata:
+      labels:
+        app: superset-worker
+    spec:
+      containers:
+        - name: worker
+          image: apache/superset:4.1.1
+          env:
+            - name: SUPERSET_CONFIG_PATH
+              value: /app/pythonpath/superset_config.py
+          envFrom:
+            - secretRef:
+                name: superset-secrets
+          volumeMounts:
+            - name: config
+              mountPath: /app/pythonpath/superset_config.py
+              subPath: superset_config.py
+          command:
+            - /bin/sh
+            - -c
+            - celery --app=superset.tasks.celery_app:app worker --pool=prefork -O fair -c 2 --loglevel=INFO
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "1"
+              memory: "2Gi"
+      volumes:
+        - name: config
+          configMap:
+            name: superset-config
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: superset-worker
+  namespace: superset
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: superset-worker
+  minReplicas: 1
+  maxReplicas: 6
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70

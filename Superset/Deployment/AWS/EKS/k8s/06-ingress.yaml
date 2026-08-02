@@ -1,0 +1,30 @@
+# Replace CERTIFICATE_ARN with: terraform output -raw certificate_arn
+# Replace ALB_SECURITY_GROUPS with: terraform output needs alb sg — use annotation below
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: superset
+  namespace: superset
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/certificate-arn: CERTIFICATE_ARN
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/success-codes: "200"
+    # Optional: pin to your ALB SG from terraform
+    # alb.ingress.kubernetes.io/security-groups: sg-xxxxxxxx
+spec:
+  rules:
+    - host: app.superset.atwish.org
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: superset-web
+                port:
+                  number: 8088
