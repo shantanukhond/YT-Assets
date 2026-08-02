@@ -32,6 +32,10 @@ PROXY_FIX_CONFIG = {
     "x_prefix": 1,
 }
 
+# Custom domain behind ALB (HTTPS)
+PREFERRED_URL_SCHEME = "https"
+ENABLE_CORS = False
+
 FEATURE_FLAGS = {
     "ALERT_REPORTS": True,
 }

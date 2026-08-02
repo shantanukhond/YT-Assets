@@ -49,26 +49,28 @@ module "alb" {
   vpc_id                = module.vpc.vpc_id
   public_subnet_ids     = module.vpc.public_subnet_ids
   alb_security_group_id = module.vpc.alb_security_group_id
+  domain_name           = var.domain_name
+  route53_zone_name     = var.route53_zone_name
 }
 
 module "rds" {
   source = "./modules/rds"
 
-  project_name           = var.project_name
-  environment            = var.environment
-  private_subnet_ids     = module.vpc.private_subnet_ids
-  rds_security_group_id  = module.vpc.rds_security_group_id
-  db_username            = var.db_username
-  db_password            = random_password.db.result
+  project_name              = var.project_name
+  environment               = var.environment
+  private_data_subnet_ids   = module.vpc.private_data_subnet_ids
+  rds_security_group_id     = module.vpc.rds_security_group_id
+  db_username               = var.db_username
+  db_password               = random_password.db.result
 }
 
 module "redis" {
   source = "./modules/redis"
 
-  project_name             = var.project_name
-  environment              = var.environment
-  private_subnet_ids       = module.vpc.private_subnet_ids
-  redis_security_group_id  = module.vpc.redis_security_group_id
+  project_name              = var.project_name
+  environment               = var.environment
+  private_data_subnet_ids   = module.vpc.private_data_subnet_ids
+  redis_security_group_id   = module.vpc.redis_security_group_id
 }
 
 module "secrets" {
@@ -89,7 +91,7 @@ module "ecs" {
   environment              = var.environment
   aws_region               = var.aws_region
   superset_image           = var.superset_image
-  public_subnet_ids        = module.vpc.public_subnet_ids
+  private_app_subnet_ids   = module.vpc.private_app_subnet_ids
   ecs_security_group_id    = module.vpc.ecs_security_group_id
   target_group_arn         = module.alb.target_group_arn
   secret_arn               = module.secrets.secret_arn

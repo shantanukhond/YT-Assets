@@ -4,7 +4,7 @@ locals {
 
 resource "aws_elasticache_subnet_group" "main" {
   name       = "${local.name}-redis-subnet"
-  subnet_ids = var.private_subnet_ids
+  subnet_ids = var.private_data_subnet_ids
 }
 
 resource "aws_elasticache_cluster" "main" {

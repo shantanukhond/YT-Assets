@@ -53,3 +53,15 @@ variable "superset_admin_email" {
   type    = string
   default = "admin@example.com"
 }
+
+variable "domain_name" {
+  type        = string
+  default     = "app.superset.atwish.org"
+  description = "Custom domain for Superset"
+}
+
+variable "route53_zone_name" {
+  type        = string
+  default     = "atwish.org"
+  description = "Existing public Route53 hosted zone that owns the domain"
+}

@@ -1,6 +1,10 @@
-output "alb_url" {
+output "app_url" {
   description = "Open this URL to access Superset"
-  value       = "http://${module.alb.alb_dns_name}"
+  value       = module.alb.app_url
+}
+
+output "domain_name" {
+  value = module.alb.domain_name
 }
 
 output "alb_dns_name" {

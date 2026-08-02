@@ -6,7 +6,7 @@ variable "environment" {
   type = string
 }
 
-variable "private_subnet_ids" {
+variable "private_data_subnet_ids" {
   type = list(string)
 }
 

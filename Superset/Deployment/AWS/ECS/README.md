@@ -8,18 +8,29 @@ No ECR needed.
 ```
 Internet
    │
-   ▼
-ALB (port 80)
-   │
-   ▼
-ECS Fargate
-├── web     (scalable)
-├── worker  (scalable)
-└── beat    (always 1)
-   │
-   ├── RDS PostgreSQL   (metadata DB)
-   └── ElastiCache Redis (cache + Celery)
+   ▼  app.superset.atwish.org (Route53 + ACM)
+┌──────────────────────── VPC ─────────────────────────┐
+│                                                      │
+│  PUBLIC                    PRIVATE APP               │
+│  ┌──────────────┐          ┌──────────────────────┐  │
+│  │ IGW          │          │ ECS (Fargate)        │  │
+│  │ ALB :443 ────┼─────────►│  web / worker / beat │  │
+│  │ NAT Gateway  │          └──────────┬───────────┘  │
+│  └──────────────┘                     │              │
+│                                       ▼              │
+│                            PRIVATE DATA              │
+│                            ┌──────────────────────┐  │
+│                            │ RDS PostgreSQL       │  │
+│                            │ ElastiCache Redis    │  │
+│                            └──────────────────────┘  │
+└──────────────────────────────────────────────────────┘
 ```
+
+| Subnet | What lives there | Internet |
+|---|---|---|
+| Public | ALB, NAT | Yes (IGW) |
+| Private app | ECS web / worker / beat | Outbound only via NAT |
+| Private data | RDS + Redis | None |
 
 Secrets live in **AWS Secrets Manager**.
 Config file lives in `docker/superset_config.py` and is injected at container start.
@@ -28,7 +39,8 @@ Config file lives in `docker/superset_config.py` and is injected at container st
 
 | Resource | Purpose |
 |---|---|
-| VPC + subnets + security groups | Networking |
+| VPC + 6 subnets (2 public, 2 app, 2 data) | Networking across 2 AZs |
+| NAT Gateway | Private ECS can pull Docker Hub images |
 | ALB | Public entry point |
 | RDS PostgreSQL | Superset metadata |
 | ElastiCache Redis | Cache + Celery broker |
@@ -39,7 +51,7 @@ Config file lives in `docker/superset_config.py` and is injected at container st
 
 - AWS CLI configured (`aws configure`)
 - Terraform >= 1.5
-- Permissions to create VPC, ECS, RDS, ElastiCache, ALB, IAM, Secrets Manager
+- Permissions to create VPC, ECS, RDS, ElastiCache, ALB, IAM, Secrets Manager, NAT Gateway
 
 ## Deploy
 
@@ -54,14 +66,37 @@ terraform apply
 After apply:
 
 ```bash
-# Get the URL
-terraform output alb_url
+# Custom domain URL
+terraform output app_url
+# → https://app.superset.atwish.org
 
 # Get admin password
 terraform output -raw superset_admin_password
 ```
 
 Login with username `admin` and that password.
+
+## Custom domain
+
+Defaults:
+- Domain: `app.superset.atwish.org`
+- Hosted zone: `atwish.org` (must already exist in Route53)
+
+Terraform will:
+1. Create an ACM certificate for the domain
+2. Add DNS validation records in Route53
+3. Create an ALIAS record `app.superset.atwish.org` → ALB
+4. Attach HTTPS (:443) on the ALB
+5. Redirect HTTP (:80) → HTTPS
+
+Override in `variables.tf` or via CLI if needed:
+
+```hcl
+variable "domain_name"       { default = "app.superset.atwish.org" }
+variable "route53_zone_name" { default = "atwish.org" }
+```
+
+**Prerequisite:** Route53 public hosted zone for `atwish.org` must already exist, and NS records at your registrar must point to that zone.
 
 ## Scaling
 
@@ -96,7 +131,8 @@ terraform destroy
 
 ## Notes
 
-- ECS tasks run in **public subnets with public IPs** so they can pull from Docker Hub without a NAT Gateway (cheaper for demos).
-- For production, move tasks to private subnets + NAT Gateway.
-- Add HTTPS later with an ACM certificate on the ALB listener.
+- ECS runs in **private-app** subnets (no public IP). Outbound traffic goes through **NAT Gateway**.
+- RDS and Redis run in **private-data** subnets with **no internet route**.
+- NAT Gateway has a monthly cost — expected for this production-style layout.
+- Custom domain uses **ACM + Route53** with HTTPS on the ALB.
 - Pin the image version (already done: `apache/superset:4.1.1`). Avoid `latest`.
