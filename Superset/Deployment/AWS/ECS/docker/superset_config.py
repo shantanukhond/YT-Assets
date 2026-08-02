@@ -1,0 +1,37 @@
+import os
+
+SECRET_KEY = os.environ["SUPERSET_SECRET_KEY"]
+SQLALCHEMY_DATABASE_URI = os.environ["DATABASE_URL"]
+REDIS_URL = os.environ["REDIS_URL"]
+
+
+class CeleryConfig:
+    broker_url = REDIS_URL
+    result_backend = REDIS_URL
+    worker_prefetch_multiplier = 1
+    task_acks_late = False
+
+
+CELERY_CONFIG = CeleryConfig
+
+CACHE_CONFIG = {
+    "CACHE_TYPE": "RedisCache",
+    "CACHE_DEFAULT_TIMEOUT": 300,
+    "CACHE_KEY_PREFIX": "superset_",
+    "CACHE_REDIS_URL": REDIS_URL,
+}
+
+DATA_CACHE_CONFIG = CACHE_CONFIG
+
+ENABLE_PROXY_FIX = True
+PROXY_FIX_CONFIG = {
+    "x_for": 1,
+    "x_proto": 1,
+    "x_host": 1,
+    "x_port": 1,
+    "x_prefix": 1,
+}
+
+FEATURE_FLAGS = {
+    "ALERT_REPORTS": True,
+}
