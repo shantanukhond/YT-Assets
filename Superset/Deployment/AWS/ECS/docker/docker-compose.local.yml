@@ -1,0 +1,120 @@
+version: "3.8"
+
+# Local smoke test for the ECS setup: same image + same bootstrap/config files
+# as terraform/modules/ecs/main.tf, pointed at local Postgres/Redis instead of
+# RDS/ElastiCache. Run this before `terraform apply` to confirm the image pulls
+# and the container boots cleanly.
+#
+# Usage:
+#   cd docker
+#   docker compose -f docker-compose.local.yml up --build
+#   open http://localhost:8088   (login: admin / admin)
+#
+#   docker compose -f docker-compose.local.yml down -v   # tear down + wipe db
+
+x-superset-image: &superset-image apache/superset:6.0.0
+
+x-common-env: &common-env
+  DATABASE_DIALECT: postgresql
+  DATABASE_URL: postgresql+psycopg2://superset:superset@db:5432/superset
+  REDIS_URL: redis://redis:6379/0
+  SUPERSET_SECRET_KEY: local-dev-only-secret-key-change-me
+  SUPERSET_CONFIG_PATH: /app/pythonpath/superset_config.py
+  SUPERSET_ADMIN_USERNAME: admin
+  SUPERSET_ADMIN_EMAIL: admin@example.com
+  SUPERSET_ADMIN_PASSWORD: admin
+  SUPERSET_ENV: production
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: superset
+      POSTGRES_PASSWORD: superset
+      POSTGRES_DB: superset
+    volumes:
+      - superset-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U superset"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  superset-web:
+    image: *superset-image
+    user: "0"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      <<: *common-env
+    ports:
+      - "8088:8088"
+    volumes:
+      - ./superset_config.py:/app/pythonpath/superset_config.py:ro
+      - ./docker-bootstrap.sh:/app/docker/docker-bootstrap.sh
+    entrypoint: /bin/sh
+    command: >
+      -c "
+      chmod +x /app/docker/docker-bootstrap.sh &&
+      /app/docker/docker-bootstrap.sh &&
+      superset db upgrade &&
+      (superset fab create-admin --username \"$$SUPERSET_ADMIN_USERNAME\" --firstname Admin --lastname User --email \"$$SUPERSET_ADMIN_EMAIL\" --password \"$$SUPERSET_ADMIN_PASSWORD\" || true) &&
+      superset init &&
+      /app/docker/docker-bootstrap.sh app-gunicorn
+      "
+
+  superset-worker:
+    image: *superset-image
+    user: "0"
+    restart: on-failure:5
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      <<: *common-env
+    volumes:
+      - ./superset_config.py:/app/pythonpath/superset_config.py:ro
+      - ./docker-bootstrap.sh:/app/docker/docker-bootstrap.sh
+    entrypoint: /bin/sh
+    command: >
+      -c "
+      chmod +x /app/docker/docker-bootstrap.sh &&
+      /app/docker/docker-bootstrap.sh worker
+      "
+
+  superset-beat:
+    image: *superset-image
+    user: "0"
+    restart: on-failure:5
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      <<: *common-env
+    volumes:
+      - ./superset_config.py:/app/pythonpath/superset_config.py:ro
+      - ./docker-bootstrap.sh:/app/docker/docker-bootstrap.sh
+    entrypoint: /bin/sh
+    command: >
+      -c "
+      chmod +x /app/docker/docker-bootstrap.sh &&
+      /app/docker/docker-bootstrap.sh beat
+      "
+
+volumes:
+  superset-db:

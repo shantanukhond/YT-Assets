@@ -1,8 +1,9 @@
 locals {
   name = "${var.project_name}-${var.environment}"
 
-  # Encode config file so we can write it at container start (no custom image/ECR needed)
-  config_b64 = filebase64("${path.module}/../../../docker/superset_config.py")
+  # Encode config + bootstrap script (mirrors docker-compose-image-tag.yml volume mount)
+  config_b64     = filebase64("${path.module}/../../../docker/superset_config.py")
+  bootstrap_b64  = filebase64("${path.module}/../../../docker/docker-bootstrap.sh")
 
   common_environment = [
     {
@@ -12,6 +13,18 @@ locals {
     {
       name  = "SUPERSET_CONFIG_B64"
       value = local.config_b64
+    },
+    {
+      name  = "DOCKER_BOOTSTRAP_B64"
+      value = local.bootstrap_b64
+    },
+    {
+      name  = "DATABASE_DIALECT"
+      value = "postgresql"
+    },
+    {
+      name  = "SUPERSET_ENV"
+      value = "production"
     },
     {
       name  = "SUPERSET_ADMIN_USERNAME"
@@ -42,7 +55,8 @@ locals {
     }
   ]
 
-  write_config = "echo \"$SUPERSET_CONFIG_B64\" | base64 -d > /tmp/superset_config.py"
+  write_config    = "echo \"$SUPERSET_CONFIG_B64\" | base64 -d > /tmp/superset_config.py"
+  write_bootstrap = "mkdir -p /app/docker && echo \"$DOCKER_BOOTSTRAP_B64\" | base64 -d > /app/docker/docker-bootstrap.sh && chmod +x /app/docker/docker-bootstrap.sh"
 }
 
 resource "aws_cloudwatch_log_group" "superset" {
@@ -123,6 +137,7 @@ resource "aws_ecs_task_definition" "web" {
     name      = "superset-web"
     image     = var.superset_image
     essential = true
+    user      = "0"
 
     portMappings = [{
       containerPort = 8088
@@ -135,7 +150,7 @@ resource "aws_ecs_task_definition" "web" {
     command = [
       "/bin/sh",
       "-c",
-      "${local.write_config} && superset db upgrade && (superset fab create-admin --username \"$SUPERSET_ADMIN_USERNAME\" --firstname Admin --lastname User --email \"$SUPERSET_ADMIN_EMAIL\" --password \"$SUPERSET_ADMIN_PASSWORD\" || true) && superset init && /usr/bin/run-server.sh"
+      "${local.write_config} && ${local.write_bootstrap} && /app/docker/docker-bootstrap.sh && superset db upgrade && (superset fab create-admin --username \"$SUPERSET_ADMIN_USERNAME\" --firstname Admin --lastname User --email \"$SUPERSET_ADMIN_EMAIL\" --password \"$SUPERSET_ADMIN_PASSWORD\" || true) && superset init && /app/docker/docker-bootstrap.sh app-gunicorn"
     ]
 
     logConfiguration = {
@@ -185,6 +200,7 @@ resource "aws_ecs_task_definition" "worker" {
     name      = "superset-worker"
     image     = var.superset_image
     essential = true
+    user      = "0"
 
     environment = local.common_environment
     secrets     = local.common_secrets
@@ -192,7 +208,7 @@ resource "aws_ecs_task_definition" "worker" {
     command = [
       "/bin/sh",
       "-c",
-      "${local.write_config} && celery --app=superset.tasks.celery_app:app worker --pool=prefork -O fair -c 2 --loglevel=INFO"
+      "${local.write_config} && ${local.write_bootstrap} && /app/docker/docker-bootstrap.sh worker"
     ]
 
     logConfiguration = {
@@ -234,6 +250,7 @@ resource "aws_ecs_task_definition" "beat" {
     name      = "superset-beat"
     image     = var.superset_image
     essential = true
+    user      = "0"
 
     environment = local.common_environment
     secrets     = local.common_secrets
@@ -241,7 +258,7 @@ resource "aws_ecs_task_definition" "beat" {
     command = [
       "/bin/sh",
       "-c",
-      "${local.write_config} && celery --app=superset.tasks.celery_app:app beat --loglevel=INFO"
+      "${local.write_config} && ${local.write_bootstrap} && /app/docker/docker-bootstrap.sh beat"
     ]
 
     logConfiguration = {

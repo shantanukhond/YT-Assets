@@ -1,6 +1,7 @@
 # Deploy Apache Superset on AWS ECS (Fargate)
 
-Simple Terraform setup using the ready-made `apache/superset` image.
+Simple Terraform setup using the official `apache/superset:6.0.0` image and the same
+bootstrap scripts as `docker-compose-image-tag.yml` (with `TAG=6.0.0`).
 No ECR needed.
 
 ## Architecture
@@ -133,4 +134,5 @@ terraform destroy
 - RDS and Redis run in **private-data** subnets with **no internet route**.
 - NAT Gateway has a monthly cost — expected for this production-style layout.
 - Custom domain uses **ACM + Cloudflare DNS** (no Route53).
-- Pin the image version (already done: `apache/superset:4.1.1`). Avoid `latest`.
+- Pin the image version (already done: `apache/superset:6.0.0`). Avoid `latest`.
+- Same pattern as official docs: `export TAG=6.0.0` + `docker compose -f docker-compose-image-tag.yml up`. ECS injects the matching `docker/docker-bootstrap.sh` from the 6.0.0 tag at container start (compose mounts it as a volume).

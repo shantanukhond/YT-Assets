@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(aws sts *)",
+      "Bash(aws login *)",
+      "Bash(aws configure *)",
+      "Read(//Users/shantanukhond/.aws/**)",
+      "Bash(aws secretsmanager *)",
+      "Bash(terraform import *)"
+    ]
+  }
+}
