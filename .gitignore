@@ -1,10 +1,71 @@
+# OS / editor
 .DS_Store
 ._.DS_Store
 **/.DS_Store
 **/._.DS_Store
-.aiagent
-__pycache__
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 **/venv/
+**/.venv/
+**/env/
+
+# Node
 **/node_modules/
-**/db.sqlite3
+npm-debug.log*
+yarn-error.log*
+
+# Local env / secrets (never commit)
 **/.env
+**/.env.*
+!**/.env.example
+!**/.env.sample
+**/secrets/
+**/*.pem
+**/*.key
+!**/*.key.example
+**/id_rsa*
+**/credentials.json
+**/service-account*.json
+**/kubeconfig
+**/kubeconfig-*
+**/.aws/
+**/.kube/
+
+# Databases / local data
+**/db.sqlite3
+**/*.sqlite3
+**/*.db
+
+# Terraform
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+**/crash.log
+**/crash.*.log
+**/*.tfvars
+**/*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Logs / temp
+*.log
+tmp/
+temp/
+.aiagent

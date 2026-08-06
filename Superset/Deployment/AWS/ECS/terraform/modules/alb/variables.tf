@@ -23,7 +23,8 @@ variable "domain_name" {
   description = "Custom domain for Superset, e.g. app.superset.atwish.org"
 }
 
-variable "route53_zone_name" {
-  type        = string
-  description = "Existing Route53 hosted zone, e.g. atwish.org"
+variable "enable_https" {
+  type        = bool
+  default     = false
+  description = "Set true after adding ACM validation CNAMEs in Cloudflare"
 }

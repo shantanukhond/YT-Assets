@@ -2,11 +2,7 @@ locals {
   name = "${var.project_name}-${var.environment}"
 }
 
-data "aws_route53_zone" "main" {
-  name         = var.route53_zone_name
-  private_zone = false
-}
-
+# ACM cert — validate via Cloudflare DNS (no Route53)
 resource "aws_acm_certificate" "main" {
   domain_name       = var.domain_name
   validation_method = "DNS"
@@ -20,27 +16,13 @@ resource "aws_acm_certificate" "main" {
   }
 }
 
-resource "aws_route53_record" "cert_validation" {
-  for_each = {
-    for dvo in aws_acm_certificate.main.domain_validation_options : dvo.domain_name => {
-      name   = dvo.resource_record_name
-      record = dvo.resource_record_value
-      type   = dvo.resource_record_type
-    }
-  }
-
-  allow_overwrite = true
-  name            = each.value.name
-  records         = [each.value.record]
-  ttl             = 60
-  type            = each.value.type
-  zone_id         = data.aws_route53_zone.main.zone_id
-}
-
+# Optional: wait for Cloudflare validation when enable_https=true
 resource "aws_acm_certificate_validation" "main" {
-  certificate_arn         = aws_acm_certificate.main.arn
-  validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
-}
+  count = var.enable_https ? 1 : 0
 
-# Alias record is created after Ingress ALB exists (see README)
-# Optional input via alb_dns_name / alb_zone_id if you re-apply later.
+  certificate_arn = aws_acm_certificate.main.arn
+
+  timeouts {
+    create = "45m"
+  }
+}

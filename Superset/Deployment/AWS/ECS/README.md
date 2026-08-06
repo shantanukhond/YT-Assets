@@ -48,9 +48,12 @@ terraform apply
 After apply:
 
 ```bash
-# Custom domain URL
-terraform output app_url
-# → https://app.superset.atwish.org
+# ALB hostname (use this as Cloudflare CNAME target)
+terraform output alb_dns_name
+
+# Cloudflare records to add
+terraform output cloudflare_app_cname
+terraform output acm_validation_records
 
 # Get admin password
 terraform output -raw superset_admin_password
@@ -58,27 +61,40 @@ terraform output -raw superset_admin_password
 
 Login with username `admin` and that password.
 
-## Custom domain
+## Custom domain (Cloudflare)
 
-Defaults:
-- Domain: `app.superset.atwish.org`
-- Hosted zone: `atwish.org` (must already exist in Route53)
+DNS is managed in **Cloudflare** (no Route53).
 
-Terraform will:
-1. Create an ACM certificate for the domain
-2. Add DNS validation records in Route53
-3. Create an ALIAS record `app.superset.atwish.org` → ALB
-4. Attach HTTPS (:443) on the ALB
-5. Redirect HTTP (:80) → HTTPS
+### Step 1 — First apply (HTTP works)
 
-Override in `variables.tf` or via CLI if needed:
-
-```hcl
-variable "domain_name"       { default = "app.superset.atwish.org" }
-variable "route53_zone_name" { default = "atwish.org" }
+```bash
+terraform apply
 ```
 
-**Prerequisite:** Route53 public hosted zone for `atwish.org` must already exist, and NS records at your registrar must point to that zone.
+### Step 2 — Add Cloudflare DNS records (DNS only / grey cloud)
+
+**App hostname:**
+
+| Type | Name | Target | Proxy |
+|---|---|---|---|
+| CNAME | `app.superset` | value of `terraform output -raw alb_dns_name` | Off (grey) |
+
+**ACM validation** (from `terraform output acm_validation_records`):
+
+| Type | Name | Target | Proxy |
+|---|---|---|---|
+| CNAME | *(from output)* | *(from output)* | Off (grey) |
+
+### Step 3 — Enable HTTPS
+
+```bash
+terraform apply -var='enable_https=true'
+```
+
+This waits for ACM to become Issued, then attaches HTTPS :443 and redirects HTTP → HTTPS.
+
+Open: `https://app.superset.atwish.org`
+
 
 ## Scaling
 
@@ -91,7 +107,7 @@ variable "route53_zone_name" { default = "atwish.org" }
 Change counts in `variables.tf`:
 
 ```hcl
-variable "web_desired_count"    { default = 2 }
+variable "web_desired_count"    { default = 1 }
 variable "worker_desired_count" { default = 1 }
 variable "beat_desired_count"   { default = 1 }  # do not raise this
 ```
@@ -116,5 +132,5 @@ terraform destroy
 - ECS runs in **private-app** subnets (no public IP). Outbound traffic goes through **NAT Gateway**.
 - RDS and Redis run in **private-data** subnets with **no internet route**.
 - NAT Gateway has a monthly cost — expected for this production-style layout.
-- Custom domain uses **ACM + Route53** with HTTPS on the ALB.
+- Custom domain uses **ACM + Cloudflare DNS** (no Route53).
 - Pin the image version (already done: `apache/superset:4.1.1`). Avoid `latest`.

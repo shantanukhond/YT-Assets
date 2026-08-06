@@ -10,6 +10,11 @@ output "certificate_arn" {
   value = module.dns.certificate_arn
 }
 
+output "acm_validation_records" {
+  description = "ACM validation CNAMEs to add in Cloudflare (DNS only / grey cloud)"
+  value       = module.dns.acm_validation_records
+}
+
 output "cluster_name" {
   value = module.eks.cluster_name
 }

@@ -8,7 +8,18 @@ output "domain_name" {
 }
 
 output "alb_dns_name" {
-  value = module.alb.alb_dns_name
+  description = "Cloudflare CNAME target for your domain"
+  value       = module.alb.alb_dns_name
+}
+
+output "cloudflare_app_cname" {
+  description = "App hostname CNAME to add in Cloudflare (DNS only / grey cloud)"
+  value       = module.alb.cloudflare_app_cname
+}
+
+output "acm_validation_records" {
+  description = "ACM validation CNAMEs to add in Cloudflare (DNS only / grey cloud)"
+  value       = module.alb.acm_validation_records
 }
 
 output "ecs_cluster_name" {

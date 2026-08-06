@@ -30,7 +30,7 @@ variable "db_username" {
 
 variable "web_desired_count" {
   type    = number
-  default = 2
+  default = 1
 }
 
 variable "worker_desired_count" {
@@ -57,11 +57,11 @@ variable "superset_admin_email" {
 variable "domain_name" {
   type        = string
   default     = "app.superset.atwish.org"
-  description = "Custom domain for Superset"
+  description = "Custom domain for Superset (DNS managed in Cloudflare)"
 }
 
-variable "route53_zone_name" {
-  type        = string
-  default     = "atwish.org"
-  description = "Existing public Route53 hosted zone that owns the domain"
+variable "enable_https" {
+  type        = bool
+  default     = false
+  description = "Set true after adding ACM validation CNAMEs in Cloudflare, then re-apply"
 }

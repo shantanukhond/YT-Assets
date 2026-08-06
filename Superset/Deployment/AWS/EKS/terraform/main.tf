@@ -89,8 +89,8 @@ module "secrets" {
 module "dns" {
   source = "./modules/dns"
 
-  project_name      = var.project_name
-  environment       = var.environment
-  domain_name       = var.domain_name
-  route53_zone_name = var.route53_zone_name
+  project_name = var.project_name
+  environment  = var.environment
+  domain_name  = var.domain_name
+  enable_https = var.enable_https
 }

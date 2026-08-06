@@ -1,7 +1,7 @@
 <mxfile host="65bd71144e">
-    <diagram name="ECS Deployment" id="GiPjUuSGOjgG6WFFUx7K">
+  <diagram name="ECS Deployment" id="GiPjUuSGOjgG6WFFUx7K">
         <mxGraphModel dx="1812" dy="955" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2100" pageHeight="1400" math="0" shadow="0">
-            <root>
+      <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
                 <mxCell id="title" value="Apache Superset on AWS ECS (Fargate)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=22;fontStyle=1;fontColor=#FFFFFF;" parent="1" vertex="1">
@@ -133,7 +133,7 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-            </root>
-        </mxGraphModel>
-    </diagram>
+      </root>
+    </mxGraphModel>
+  </diagram>
 </mxfile>

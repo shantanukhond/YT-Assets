@@ -35,7 +35,7 @@ variable "db_username" {
 
 variable "web_replicas" {
   type    = number
-  default = 2
+  default = 1
 }
 
 variable "worker_replicas" {
@@ -64,7 +64,8 @@ variable "domain_name" {
   default = "app.superset.atwish.org"
 }
 
-variable "route53_zone_name" {
-  type    = string
-  default = "atwish.org"
+variable "enable_https" {
+  type        = bool
+  default     = false
+  description = "Set true after adding ACM validation CNAMEs in Cloudflare"
 }

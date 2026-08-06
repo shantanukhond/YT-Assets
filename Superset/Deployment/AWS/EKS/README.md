@@ -9,10 +9,10 @@ Uses the ready-made `apache/superset` image — no ECR needed.
 
 ```
 Internet
-   │  app.superset.atwish.org (Route53 + ACM)
+   │  app.superset.atwish.org (Cloudflare DNS + ACM)
    ▼
 ┌──────────────── AWS Cloud ───────────────────────┐
-│  Route53 · ACM · Secrets Manager · CloudWatch    │
+│  ACM · Secrets Manager · CloudWatch              │
 │                                                  │
 │  ┌────────────────── VPC ─────────────────────┐  │
 │  │ PUBLIC          PRIVATE APP                │  │
@@ -44,8 +44,8 @@ Internet
 ## Prerequisites
 
 - AWS CLI, Terraform >= 1.5, kubectl, helm
-- Route53 public zone for `atwish.org`
-- Permissions for EKS, VPC, RDS, ElastiCache, IAM, ACM, Route53
+- Domain DNS in Cloudflare (or any DNS provider)
+- Permissions for EKS, VPC, RDS, ElastiCache, IAM, ACM
 
 ## 1) Deploy infrastructure
 
@@ -61,6 +61,7 @@ Useful outputs:
 terraform output configure_kubectl
 terraform output -raw certificate_arn
 terraform output -raw alb_controller_role_arn
+terraform output acm_validation_records
 terraform output -raw superset_admin_password
 ```
 
@@ -73,14 +74,20 @@ export AWS_REGION=ap-south-1
 export CLUSTER_NAME=$(cd terraform && terraform output -raw cluster_name)
 export ALB_CONTROLLER_ROLE_ARN=$(cd terraform && terraform output -raw alb_controller_role_arn)
 export CERTIFICATE_ARN=$(cd terraform && terraform output -raw certificate_arn)
-export ROUTE53_ZONE_ID=$(aws route53 list-hosted-zones-by-name --dns-name atwish.org --query 'HostedZones[0].Id' --output text | sed 's|/hostedzone/||')
 export SECRET_ID=superset-eks-dev/superset
 
 chmod +x scripts/*.sh
 ./scripts/deploy-app.sh
 ```
 
-Open:
+The script prints the ALB hostname. Add in **Cloudflare** (DNS only / grey cloud):
+
+| Type | Name | Target | Proxy |
+|---|---|---|---|
+| CNAME | `app.superset` | ALB hostname from script | Off |
+| CNAME | *(ACM validation from `terraform output acm_validation_records`)* | *(value)* | Off |
+
+Then enable HTTPS cert validation if needed and open:
 
 ```text
 https://app.superset.atwish.org
@@ -110,7 +117,7 @@ kubectl rollout restart deploy/superset-web deploy/superset-worker deploy/supers
 
 | Workload | Scale? | How |
 |---|---|---|
-| web | Yes | HPA on CPU (2–6) |
+| web | Yes | HPA on CPU (1–6) |
 | worker | Yes | HPA on CPU (1–6) |
 | beat | **No** | Always `replicas: 1` |
 
@@ -125,6 +132,6 @@ cd terraform && terraform destroy
 ## Notes
 
 - ALB is created by the **AWS Load Balancer Controller** from the Ingress — not by Terraform directly.
-- DNS A/ALIAS record is created by `scripts/deploy-app.sh` after the ALB hostname appears.
+- DNS is managed in **Cloudflare** (CNAME to ALB). No Route53 required.
 - Beat must never scale above 1.
 - Pin image tags (`apache/superset:4.1.1`). Avoid `latest`.

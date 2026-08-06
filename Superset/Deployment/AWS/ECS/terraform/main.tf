@@ -50,7 +50,7 @@ module "alb" {
   public_subnet_ids     = module.vpc.public_subnet_ids
   alb_security_group_id = module.vpc.alb_security_group_id
   domain_name           = var.domain_name
-  route53_zone_name     = var.route53_zone_name
+  enable_https          = var.enable_https
 }
 
 module "rds" {
