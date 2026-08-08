@@ -17,12 +17,18 @@ spec:
     spec:
       containers:
         - name: superset
-          image: apache/superset:4.1.1
+          image: apache/superset:6.0.0
+          securityContext:
+            runAsUser: 0
           ports:
             - containerPort: 8088
           env:
             - name: SUPERSET_CONFIG_PATH
               value: /app/pythonpath/superset_config.py
+            - name: DATABASE_DIALECT
+              value: postgresql
+            - name: SUPERSET_ENV
+              value: production
           envFrom:
             - secretRef:
                 name: superset-secrets
@@ -30,10 +36,14 @@ spec:
             - name: config
               mountPath: /app/pythonpath/superset_config.py
               subPath: superset_config.py
+            - name: bootstrap
+              mountPath: /app/docker/docker-bootstrap.sh
+              subPath: docker-bootstrap.sh
           command:
             - /bin/sh
             - -c
             - |
+              /app/docker/docker-bootstrap.sh
               superset db upgrade
               (superset fab create-admin \
                 --username "$SUPERSET_ADMIN_USERNAME" \
@@ -42,7 +52,7 @@ spec:
                 --email "$SUPERSET_ADMIN_EMAIL" \
                 --password "$SUPERSET_ADMIN_PASSWORD" || true)
               superset init
-              /usr/bin/run-server.sh
+              /app/docker/docker-bootstrap.sh app-gunicorn
           readinessProbe:
             httpGet:
               path: /health
@@ -66,6 +76,10 @@ spec:
         - name: config
           configMap:
             name: superset-config
+        - name: bootstrap
+          configMap:
+            name: superset-bootstrap
+            defaultMode: 0755
 ---
 apiVersion: v1
 kind: Service

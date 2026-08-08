@@ -20,7 +20,7 @@ variable "cluster_name" {
 
 variable "superset_image" {
   type    = string
-  default = "apache/superset:4.1.1"
+  default = "apache/superset:6.0.0"
 }
 
 variable "vpc_cidr" {

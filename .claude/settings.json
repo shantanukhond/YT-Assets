@@ -6,7 +6,10 @@
       "Bash(aws configure *)",
       "Read(//Users/shantanukhond/.aws/**)",
       "Bash(aws secretsmanager *)",
-      "Bash(terraform import *)"
+      "Bash(terraform import *)",
+      "Bash(python3 -c ' *)",
+      "Bash(terraform fmt *)",
+      "Bash(terraform validate *)"
     ]
   }
 }
